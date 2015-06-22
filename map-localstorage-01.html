@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="base.css"/>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            localStorage.clear();
+            var inp_key = document.body.firstElementChild;
+            var inp_value = document.body.children[1];
+            var results = document.getElementById('results');
+            inp_value.addEventListener('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    localStorage.setItem(inp_key.value, inp_value.value);
+                    // following code is to demonstrate localStorage length
+                    for (var i = 0; i < localStorage.length; i++) {
+                        var key = localStorage.key(i);
+                        createElement('li', results, '', key + ' : ' + localStorage.getItem(key));
+                    }
+                }
+            });
+        });
+
+        function createElement(elementType, parent, className, innerHTML, custom) {
+            var element = document.createElement(elementType);
+            if (parent) parent.appendChild(element);
+            if (className) element.className = className;
+            if (innerHTML) element.innerHTML = innerHTML;
+            if (typeof custom !== 'undefined') {
+                for (var prop in custom) {
+                    element.setAttribute(prop, custom[prop]);
+                }
+            }
+            return element;
+        }
+    </script>
+</head>
+<body>
+<input type="text" placeholder="key"/>
+<input type="text" placeholder="value, press enter to save"/>
+<div id="results">
+    <h1>List of key value pairs</h1>
+    <em>Close and open page to see persisted data</em>
+    <ul>
+        <li></li>
+    </ul>
+</div>
+</body>
+</html>

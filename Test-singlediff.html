@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            assert(singleDiff('toy', 'dog'), false);
+            assert(singleDiff('toy', 'toys'), true);
+            assert(singleDiff('toy', 'soy'), true);
+            assert(singleDiff('cat', 'cart'), true);
+            assert(singleDiff('met', 'me'), true);
+            assert(singleDiff('time', 'emit'), false);
+
+            assert(singleDiff('short', 'longlonglong'), false);
+            assert(singleDiff('longlonglong', 'short'), false);
+            assert(singleDiff('abcd', 'xbcde'), false);
+            assert(singleDiff('abcd', 'axbcd'), true);
+
+            assert(singleDiff('a', 'b'), true);
+            assert(singleDiff('abc', 'abc'), false);
+            assert(singleDiff('tom', 'tim'), true);
+            assert(singleDiff('cat', 'car'), true);
+
+            assert(singleDiff('abcd', 'axbxcd'), false);
+            assert(singleDiff('casts', 'cats'), true);
+            assert(singleDiff('adog', 'dog'), true);
+            assert(singleDiff('cast', 'cat'), true);
+        });
+
+        function assert(action, exp) {
+            if ( action !== exp ) {
+                console.log('Did not pass test - Expected ' + exp + ' got ' + action);
+            }
+
+            else {
+                console.log('Passed: ' + action + ' === ' + exp);
+            }
+        }
+
+        function singleDiff(w1, w2) {
+            if ( Math.abs(w1.length - w2.length) > 1 ) {
+                return false;
+            }
+
+            var diff = ( w1.length === w2.length ) ? 0 : 1;
+
+            if ( w1.length > w2.length ) {
+                var temp = w1;
+                w1 = w2;
+                w2 = w1;
+            }
+
+            for ( var i = 0, len = w1.length; i < len; i++ ) {
+
+                if ( w1[i] !== w2[i]  && w1[i] !== w2[i + 1]) {
+                    diff++;
+                }
+
+                if ( diff > 1 )
+                    return false;
+
+            }
+
+            if ( diff === 0 )
+                return false;
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

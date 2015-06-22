@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title></title>
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
+
+    <script>
+        var map;
+        var markers = [];
+
+        window.init = function () {
+            console.log('Callback must be global');
+        };
+
+        function makeAjax(dataObj) {
+            var xhr = new XMLHttpRequest();
+            var url = 'http://gllfriendfinder.herokuapp.com/friends';
+            xhr.open('POST', url);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.addEventListener('readystatechange', function() {
+                if (xhr.status === 200  && xhr.readyState === 4 ) {
+                    //console.log(JSON.parse(xhr.responseText));
+                    clearMarkers();
+                    createMarkers(JSON.parse(xhr.responseText).data);
+                }
+            });
+
+            xhr.send(JSON.stringify(dataObj));
+        }
+
+        function createLoadPromise() {
+            return new Promise( function(resolve, reject) {
+                window.addEventListener('load', function() {
+                    resolve();
+                });
+
+                window.addEventListener('error', function() {
+                    reject();
+                });
+            });
+        }
+
+        function createNavigatorPromise() {
+            return new Promise( function(resolve, reject) {
+                window.navigator.geolocation.getCurrentPosition(function(obj) {
+                    resolve(obj);
+                }, function() {
+                    reject();
+                });
+            });
+        }
+
+        function loadMap(coords) {
+            var city_lat_lng = new google.maps.LatLng(coords.latitude, coords.longitude);
+
+            // global
+            map = new google.maps.Map(document.body, {
+                zoom: 16,
+                center: city_lat_lng
+            });
+
+            /*
+            var marker = new google.maps.Marker( {
+                position: city_lat_lng,
+                map: map,
+                title: 'Raymond'
+            });
+
+            var infoWindow = new google.maps.InfoWindow( {
+                content: 'Raymond',
+                maxWidth: 200
+            });
+
+            infoWindow.open(map, marker);
+            */
+        }
+
+        function clearMarkers() {
+            for ( var i = 0, len = markers.length; i < len; i++ ) {
+                markers[i].setMap(null);
+            }
+
+            markers.length = 0;
+        }
+
+        function createMarkers(results) {
+
+            for ( var prop in results ) {
+                if ( typeof results[prop].location !== 'undefined') {
+                     var city_lat_lng = new google.maps.LatLng(results[prop].location[0], results[prop].location[1]);
+
+                     if ( results[prop].name === 'Raymond' ) {
+                         //console.log(results[prop].name);
+                         map.setCenter(city_lat_lng);
+                     }
+
+                     var marker = new google.maps.Marker( {
+                         position: city_lat_lng,
+                         map: map,
+                         title: results[prop].name
+                     } );
+
+                     var infoWindow = new google.maps.InfoWindow( {
+                         content: results[prop].name,
+                         maxWidth: 200
+                     } );
+
+                     infoWindow.open(map, marker);
+
+                     markers.push(marker);
+                 }
+            }
+        }
+
+        Promise.all([createLoadPromise(), createNavigatorPromise()]).then(function (data) {
+            // because the promise results are mapped to the promises, to get to the
+            // coords, we need to target the results of the second promise
+            // hence the data[1]
+            var coords = data[1].coords;
+
+            loadMap(coords);
+
+            var myObj = {
+                id: "9460c618-f099-4a7a-8e14-54b6034fc5e8",
+                name: 'Raymond',
+                location: [coords.latitude, coords.longitude]
+            };
+
+            //makeAjax(myObj);
+            setInterval(makeAjax.bind(null, myObj), 1 * 60 * 1000);
+        });
+
+    </script>
+</head>
+<body>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=init"></script>
+</body>
+</html>

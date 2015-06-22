@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            var webWorker = new Worker('WebWorker-02-Benchmark.js');
+            webWorker.postMessage({min: 1000, max: 5000});
+
+            webWorker.addEventListener('message', function(e) {
+                console.log(e.data);
+            });
+
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>

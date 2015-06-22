@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var webWorker = new Worker('WebWorker-Ajax-Github.js');
+
+            webWorker.addEventListener('message', function(e) {
+                //console.log(JSON.parse(e.data));
+                //renderData(JSON.parse(e.data));
+                renderData((JSON.parse(e.data)).items);
+            });
+
+            var input = document.querySelector('input[type="text"]');
+            input.addEventListener('keydown', function(e) {
+                if ( e.keyCode === 13 ) {
+                    //console.log(input.value);
+                    webWorker.postMessage(input.value);
+                }
+            });
+        });
+
+        function renderData(items) {
+            //items = Array.prototype.slice.call(items);
+            items.forEach(function(item) {
+                console.log(item.full_name);
+            });
+        }
+
+    </script>
+</head>
+<body>
+<input type="text" placeholder="Search Github" />
+</body>
+</html>

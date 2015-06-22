@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+<meta charset="UTF-8">
+<title></title>
+<script>
+    function calculatePrimes(number_of_primes) {
+        // calculate n primes
+        var primes = [];
+        var curr = 2;
+        while (primes.length < number_of_primes) {
+            if (isPrime(curr)) {
+                primes.push(curr);
+            }
+            curr++;
+        }
+        return primes;
+    }
+    function isPrime(num) {
+        // check if a number is prime
+        for (var i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i === 0) return false;
+        }
+        return true;
+    }
+    var start = new Date();
+    var primes = calculatePrimes(500000);
+    var end = new Date();
+    console.log('Time taken: ', (end - start), 'ms');
+    console.log(primes);
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('button').addEventListener('click', function () {
+            document.querySelector('div').innerHTML = 'Hello world!';
+        });
+    });
+</script>
+</head>
+<body>
+<button>Print</button>
+<div></div>
+<div id="results"></div>
+
+</body>
+</html>

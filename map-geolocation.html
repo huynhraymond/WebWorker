@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="base.css">
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+    <script>
+
+        window.addEventListener('load', function() {
+
+            navigator.geolocation.getCurrentPosition(function(obj) {
+                var coords = obj.coords;
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode( {
+                    'latLng': new google.maps.LatLng(coords.latitude, coords.longitude)
+                }, function(results, status) {
+                    //console.log(results);
+
+                    var obj = getAddressObject(results);
+
+                    //console.log(obj);
+
+                    printToForm(obj);
+                });
+            });
+
+            function getAddressObject(arr) {
+                var address;
+
+                if (Array.isArray(arr)) address = arr[0];
+
+                else address = arr;
+
+                //console.log(address['address_components']);
+
+                // return an object with type as the key and long_name as the value for each of the component
+                return address['address_components'].reduce( function(obj, component) {
+                    component.types.forEach(function(type) {
+                       obj[type] = component['long_name'];
+                    });
+                    return obj;
+                }, {});
+            }
+
+            function printToForm(address_obj) {
+                var form = document.forms.address;
+                for (var prop in address_obj) {
+                    if (typeof form[prop] !== 'undefined') form[prop].value =  address_obj[prop];
+                }
+            }
+        });
+
+    </script>
+</head>
+<body>
+
+<form name="address">
+    <div><input type="text" name="name"/></div>
+    <div><input type="text" name="street_number"/></div>
+    <div><input type="text" name="route"/></div>
+    <div><input type="text" name="locality"/></div>
+    <div><input type="text" name="administrative_area_level_1"/></div>
+    <div><input type="text" name="administrative_area_level_2"/></div>
+    <div><input type="text" name="country"/></div>
+    <div><input type="text" name="postal_code"/></div>
+</form>
+</body>
+</html>

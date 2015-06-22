@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="base.css"/>
+    <script>
+        window.addEventListener('storage', function (e) {
+            console.log(e);
+            document.querySelector('#url').innerHTML = e.url;
+            document.querySelector('#key').innerHTML = e.key;
+            document.querySelector('#value').innerHTML = e.newValue;
+        });
+    </script>
+</head>
+<body>
+<div id="results">
+    <h1>List of key value pairs</h1>
+    <em>The changes were caused by: <span id="url"></span></em>
+    <em>The key updated: <span id="key"></span> </em>
+    <em>New value for the key: <span id="value"></span></em>
+</div>
+</body>
+</html>
